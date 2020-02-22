@@ -124,9 +124,8 @@ func TestReads(t *testing.T) {
 	}
 	// run group sequentially
 	t.Run("seqgroup", func(t *testing.T) {
-		t.Run("TestSeq1", seqTest[0])
-		t.Run("TestSeq2", seqTest[1])
-		t.Run("TestSeq3", seqTest[2])
-		t.Run("TestSeq4", seqTest[3])
+		for k := range seqTest {
+			t.Run("TestSeq"+strconv.Itoa(k+1), seqTest[k])
+		}
 	})
 }
