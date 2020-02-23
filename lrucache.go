@@ -61,12 +61,13 @@ func (e *LRUCache) pushToBack(key int) {
 	var prev *ListNode
 	prev = nil
 
-	if e.lruListHead == e.lruListTail {
+	if e.lruListTail != nil && e.lruListTail.Val == key {
+		log.Debug("KEY ", key, " already at back nothing to do")
 		return
 	}
 
 	for tmp := e.lruListHead; tmp != nil; tmp = tmp.Next {
-		if tmp.Val == key && e.lruListTail != nil && e.lruListTail.Val != key {
+		if tmp.Val == key {
 			if prev != nil {
 				prev.Next = tmp.Next
 			} else {
@@ -117,16 +118,11 @@ func (e *LRUCache) Put(key int, value int) {
 	if _, keyFound = e.hashMap[key]; keyFound {
 		log.Debug("Key ", key, " already exists")
 	}
-	if e.lruListTail != nil && e.lruListTail.Val == key {
-		log.Debug("Key ", key, " already at back")
-		// add new element and update list
-		e.hashMap[key] = value
-		return
-	}
 
 	// add new element and update list
 	e.hashMap[key] = value
 	if !keyFound {
+		log.Debug("Key ", key, " create entry")
 		e.addToBack(key)
 	} else {
 		e.pushToBack(key)

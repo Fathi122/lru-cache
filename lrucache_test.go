@@ -12,7 +12,7 @@ type keyVal struct {
 }
 
 // init cache with low size capacity
-var cache LRUCache = constructor(6)
+var cache LRUCache = constructor(7)
 var lrucacheTests = [][]struct {
 	method   string
 	intput   interface{}
@@ -20,6 +20,7 @@ var lrucacheTests = [][]struct {
 }{
 	{
 		{"PUT", keyVal{2, 6}, true},
+		//		{"PUT", keyVal{2, 9}, true},
 		{"PUT", keyVal{1, 5}, true},
 		{"PUT", keyVal{1, 2}, true},
 		{"PUT", keyVal{3, 7}, true},
@@ -33,8 +34,9 @@ var lrucacheTests = [][]struct {
 		{"PUT", keyVal{99, 1122}, true},
 	},
 	{
-		{"GET", 2, -1}, // early eviction
+		{"GET", 2, 6},
 		{"GET", 1, 2},
+		{"GET", 99, 1122},
 	},
 	{
 		{"GET", 5, 6},
@@ -49,18 +51,21 @@ var lrucacheTests = [][]struct {
 		{"PUT", keyVal{10, 11}, true},
 		{"GET", 10, 11},
 		{"PUT", keyVal{11, 15}, true},
-		{"GET", 2, -1},
+
 		{"PUT", keyVal{12, 14}, true},
 		{"GET", 12, 14},
-		{"GET", 1, -1},
+
 		{"PUT", keyVal{12, 34}, true},
 		{"GET", 12, 34},
 		{"PUT", keyVal{5, 18}, true},
+		{"GET", 3, 7},
 		{"GET", 5, 18},
 		{"PUT", keyVal{13, 17}, true},
 		{"GET", 13, 17},
+		{"GET", 5, 18},
 		{"PUT", keyVal{14, 57}, true},
-		{"GET", 14, 57},
+		{"PUT", keyVal{14, 58}, true},
+		{"GET", 14, 58},
 	},
 }
 
