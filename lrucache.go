@@ -22,7 +22,8 @@ type LRUCache struct {
 }
 
 func init() {
-	log.SetLevel(log.DebugLevel)
+	// switch to DebugLevel for verbose
+	log.SetLevel(log.InfoLevel)
 }
 
 // constructor LRUcache constructor
@@ -62,7 +63,7 @@ func (e *LRUCache) pushToBack(key int) {
 	prev = nil
 
 	if e.lruListTail != nil && e.lruListTail.Val == key {
-		log.Debug("KEY ", key, " already at back nothing to do")
+		log.Debug("Key ", key, " already at back nothing to do")
 		return
 	}
 

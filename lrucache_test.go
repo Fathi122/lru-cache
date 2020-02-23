@@ -13,14 +13,13 @@ type keyVal struct {
 
 // init cache with low size capacity
 var cache LRUCache = constructor(7)
-var lrucacheTests = [][]struct {
+var lruCacheTests = [][]struct {
 	method   string
 	intput   interface{}
 	expected interface{}
 }{
 	{
 		{"PUT", keyVal{2, 6}, true},
-		//		{"PUT", keyVal{2, 9}, true},
 		{"PUT", keyVal{1, 5}, true},
 		{"PUT", keyVal{1, 2}, true},
 		{"PUT", keyVal{3, 7}, true},
@@ -68,10 +67,17 @@ var lrucacheTests = [][]struct {
 		{"GET", 14, 58},
 	},
 }
+var benchLruCacheTests = []struct {
+	method string
+	intput []interface{}
+}{
+	{"PUT", []interface{}{keyVal{2, 6}, keyVal{1, 5}, keyVal{1, 2}, keyVal{3, 7}, keyVal{5, 6}, keyVal{23, 8}, keyVal{9, 12}, keyVal{99, 1122}}},
+	{"GET", []interface{}{2, 1, 99, 9, 5, 3, 23, 8, 99, 35, 53, 5, 3}},
+}
 
 // lRUAccess test processor
 func lRUAccess(index int, t *testing.T) {
-	for _, k := range lrucacheTests[index] {
+	for _, k := range lruCacheTests[index] {
 		switch k.method {
 		case "GET":
 			if actual := cache.Get(k.intput.(int)); actual != k.expected.(int) {
@@ -80,7 +86,7 @@ func lRUAccess(index int, t *testing.T) {
 		case "PUT":
 			cache.Put(k.intput.(keyVal).key, k.intput.(keyVal).val)
 		default:
-			t.Errorf("Wrong Method Name")
+			t.Errorf("Unknown Method")
 		}
 	}
 }
@@ -138,4 +144,30 @@ func TestReads(t *testing.T) {
 			t.Run("TestSeq"+strconv.Itoa(k+1), seqTest[k])
 		}
 	})
+}
+func BenchmarkLRU(b *testing.B) {
+	for i := range benchLruCacheTests {
+		switch benchLruCacheTests[i].method {
+		case "PUT":
+			b.Run("PutLRU", func(b *testing.B) {
+				b.RunParallel(func(pb *testing.PB) {
+					for pb.Next() {
+						for _, k := range benchLruCacheTests[i].intput {
+							cache.Put(k.(keyVal).key, k.(keyVal).val)
+						}
+					}
+				})
+			})
+		case "GET":
+			b.Run("GetLRU", func(b *testing.B) {
+				for kk := 0; kk < b.N; kk++ {
+					for _, k := range benchLruCacheTests[i].intput {
+						cache.Get(k.(int))
+					}
+				}
+			})
+		default:
+			b.Errorf("Unknown Method")
+		}
+	}
 }
