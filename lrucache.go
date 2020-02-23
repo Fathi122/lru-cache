@@ -98,10 +98,10 @@ func (e *LRUCache) Get(key int) int {
 	defer e.lock.Unlock()
 
 	if _, keyFound := e.hashMap[key]; !keyFound {
-		log.Debug(key, " Key doesn't exists")
+		log.Debug(" Key ", key, " doesn't exists")
 		return -1
 	}
-	log.Debug(key, " Key found")
+	log.Debug("Key ", key, " found")
 
 	// pushing it to back
 	e.pushToBack(key)
@@ -115,7 +115,7 @@ func (e *LRUCache) Put(key int, value int) {
 
 	keyFound := false
 	if _, keyFound = e.hashMap[key]; keyFound {
-		log.Debug("Key already exists")
+		log.Debug("Key ", key, " already exists")
 	}
 	if e.lruListTail != nil && e.lruListTail.Val == key {
 		log.Debug("Key ", key, " already at back")

@@ -31,7 +31,7 @@ var lrucacheTests = [][]struct {
 		{"PUT", keyVal{99, 1122}, true},
 	},
 	{
-		{"GET", 2, -1},
+		{"GET", 2, -1}, // early eviction
 		{"GET", 1, 2},
 	},
 	{
