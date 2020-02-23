@@ -24,12 +24,14 @@ var lrucacheTests = [][]struct {
 	},
 	{
 		{"PUT", keyVal{5, 6}, true},
+		{"PUT", keyVal{23, 8}, true},
 	},
 	{
 		{"PUT", keyVal{9, 12}, true},
+		{"PUT", keyVal{99, 1122}, true},
 	},
 	{
-		{"GET", 2, 6},
+		{"GET", 2, -1},
 		{"GET", 1, 2},
 	},
 	{
@@ -63,13 +65,14 @@ var lrucacheTests = [][]struct {
 // lRUAccess test processor
 func lRUAccess(index int, t *testing.T) {
 	for _, k := range lrucacheTests[index] {
-		if k.method == "GET" {
+		switch k.method {
+		case "GET":
 			if actual := cache3.Get(k.intput.(int)); actual != k.expected.(int) {
 				t.Errorf("expected %d, actual %d for key %d", k.expected.(int), actual, k.intput.(int))
 			}
-		} else if k.method == "PUT" {
+		case "PUT":
 			cache3.Put(k.intput.(keyVal).key, k.intput.(keyVal).val)
-		} else {
+		default:
 			t.Errorf("Wrong Method Name")
 		}
 	}
