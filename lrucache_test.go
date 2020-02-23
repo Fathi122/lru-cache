@@ -5,12 +5,14 @@ import (
 	"testing"
 )
 
+// internal key/val struct wraper
 type keyVal struct {
 	key int
 	val int
 }
 
-var cache3 LRUCache = constructor(6)
+// init cache with low size capacity
+var cache LRUCache = constructor(6)
 var lrucacheTests = [][]struct {
 	method   string
 	intput   interface{}
@@ -67,11 +69,11 @@ func lRUAccess(index int, t *testing.T) {
 	for _, k := range lrucacheTests[index] {
 		switch k.method {
 		case "GET":
-			if actual := cache3.Get(k.intput.(int)); actual != k.expected.(int) {
+			if actual := cache.Get(k.intput.(int)); actual != k.expected.(int) {
 				t.Errorf("expected %d, actual %d for key %d", k.expected.(int), actual, k.intput.(int))
 			}
 		case "PUT":
-			cache3.Put(k.intput.(keyVal).key, k.intput.(keyVal).val)
+			cache.Put(k.intput.(keyVal).key, k.intput.(keyVal).val)
 		default:
 			t.Errorf("Wrong Method Name")
 		}
