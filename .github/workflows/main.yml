@@ -14,6 +14,10 @@ jobs:
         go-version: ${{ matrix.go-version }}
     - name: Checkout code
       uses: actions/checkout@v2
+    - name: Run Snyk scans to check for vulnerabilities
+      uses: snyk/actions/golang@master
+      env:
+        SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
     - name: UnitTest
       run: go test -count=2 -v ./...
     - name: BenchMarkTest
