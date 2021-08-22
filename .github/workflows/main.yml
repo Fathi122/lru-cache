@@ -20,17 +20,10 @@ jobs:
       run: snyk test
       env:
         SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
-    - name: get1.17
-      run: |
-        go version
-        go get golang.org/dl/go1.17beta1
-        go1.17beta1 download
     - name: UnitTest
       run: go test -count=2 -v ./...
     - name: BenchMarkTest
       run: go test -cpu=1 -bench=. -run='^$' ./...
-    - name: BenchMarkTest1.17
-      run: go1.17beta1 test -cpu=1 -bench=. -run='^$' ./...
     - name: Generate coverage report
       run: |
         go test -race -covermode=atomic -coverprofile="coverage.txt"
